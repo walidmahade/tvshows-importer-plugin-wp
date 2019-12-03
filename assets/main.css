@@ -1,0 +1,69 @@
+.mw-tv-shows {
+  padding: 45px;
+  box-sizing: border-box;
+}
+.mw-tv-shows .page-title {
+  text-align: center;
+  font-size: 25px;
+}
+.mw-tv-shows .search-wrap {
+  width: 100%;
+  text-align: center;
+}
+.mw-tv-shows #search-field {
+  min-width: 300px;
+  display: inline-block;
+  padding: 6px 12px;
+}
+.mw-tv-shows #tv-shows-result {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 35px;
+}
+.mw-tv-shows .tv-show-item {
+  width: 14%;
+  margin: 15px 10px;
+  border-radius: 5px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  position: relative;
+  overflow: hidden;
+}
+.mw-tv-shows .tv-show-item.is-duplicate:before {
+  content: "Duplicate";
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: #E91E63;
+  padding: 7px 15px;
+  font-weight: bold;
+  color: #fff;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+}
+.mw-tv-shows .tv-show-item .poster {
+  display: block;
+  width: 100%;
+  border-radius: 5px 5px 0 0;
+}
+.mw-tv-shows .tv-show-item .duplicate-badge {
+  position: absolute;
+  top: 25px;
+  right: 0;
+  background: white;
+  font-size: 12px;
+  font-weight: bold;
+  padding: 1px 8px 3px 8px;
+  border-radius: 2px 0 0 2px;
+  box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.1);
+  opacity: 0;
+  visibility: hidden;
+}
+.mw-tv-shows .tv-show-item .duplicate-badge.show {
+  opacity: 1;
+  visibility: visible;
+}
+.mw-tv-shows .tv-show-item .content {
+  padding: 20px 15px 15px 15px;
+}
+
+/*# sourceMappingURL=main.css.map */
