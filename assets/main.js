@@ -158,6 +158,7 @@
         }).done(function (data) {
             // console.log("------------------------- <br />");
             console.log(data);
+
             let singleTvGenresArr = data.genres.map(genre => {
                 return genre.name
             });
@@ -176,6 +177,33 @@
                     "tv_genres": singleTvGenresArr
                 }
             };
+
+            $status.html("saving featured image");
+
+            if (data.poster_path) {
+                let imgObj = {
+                    "imgurl": "https://image.tmdb.org/t/p/w500" + data.poster_path
+                };
+
+                console.log(imgObj);
+
+                $.ajax({
+                    url: `${magicalData.siteURL}/wp-json/tvshows/add-image`,
+                    async: false,
+                    type: "POST",
+                    data: JSON.stringify(imgObj),
+                    contentType: "application/json",
+                    headers: {
+                        "Content-Type": 'application/json;charset=UTF-8',
+                        "X-WP-Nonce": magicalData.nonce
+                    }
+                }).done(function (featured_img_id) {
+                    TVshow["featured_media"] = featured_img_id;
+                    console.log("saved featured image");
+                });
+            } else {
+                $status.html("No featured image found.");
+            }
 
             $.when(
                 // ------------- fetch season for current tv show
@@ -204,12 +232,6 @@
 
                         TVshow["fields"]["seasons_list"].push(seasonObj);
                     });
-
-                    // console.log("----- season obj ------");
-                    // console.log(seasonObj);
-
-                    // return seasonObj;
-
                 })
             ).then(function () {
                 console.log("----- season list ------");
