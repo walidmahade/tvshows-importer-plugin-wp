@@ -60,10 +60,11 @@
 
         tvShowsArr.map(tvShow => {
             let tvShowDesc = truncate(tvShow.overview, 20) || "No description found.";
+            let posterURL =
 
-            constructHTML += (`
+                constructHTML += (`
                 <div class="tv-show-item" data-item-id="${tvShow.id}">
-                    <img src="https://image.tmdb.org/t/p/w500/${tvShow.poster_path}" alt="" class="poster">
+                    ${tvShow.poster_path ? '<img src="https://image.tmdb.org/t/p/w500/' + tvShow.poster_path + '" alt="" class="poster">' : ' '}
                     <div class="duplicate-badge">
                         Already Imported!!
                     </div>
@@ -245,10 +246,27 @@
     $searchField.keyup(function (e) {
         e.preventDefault();
         searchQuery = $searchField.val();
+        resultPage = 1;
         url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
 
         if (e.keyCode === 13) {
             // $loader.show();
+            console.log("fetching post");
+            // status update
+            $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
+            // actual work
+            fetchTVshows(url);
+        }
+    });
+
+    // pagination functionality
+    $currentResultPageDisplay.keyup(function (e) {
+        // e.preventDefault();
+        searchQuery = $searchField.val();
+        resultPage = $currentResultPageDisplay.val();
+        url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
+
+        if (e.keyCode === 13) {
             console.log("fetching post");
             // status update
             $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
