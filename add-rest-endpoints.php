@@ -46,7 +46,7 @@ function search_tvshow_id($data) {
 	));
 
 	if (count($posts) == 1) {
-		return true;
+		return $posts[0]->ID;
 	} else {
 		return false;
 	}

@@ -20,30 +20,50 @@ function my_admin_menu() {
 
 function mw_tv_show_import_page(){
 	?>
-	<div class="mw-tv-shows">
+    <div class="mw-tv-shows">
+        <div id="ui-update">
+            Use search to get started.
+        </div>
+
 		<h2 class="page-title">Import TV Shows</h2>
 
-        <div class="search-wrap">
-            <input type="search" placeholder="Search TV Shows"
-                id="search-field">
-        </div>
+        <div class="header-under">
+			<div class="search-wrap">
+				<input type="search" placeholder="Search TV Shows"
+					id="search-field">
+			</div>
+
+			<!-- START filters -->
+			<div id="filters">
+				<select id="sort-tvshows">
+					<option value="default" selected>Default.</option>
+					<option value="first_air_date">By Release Date.</option>
+					<option value="vote_average">By Rating.</option>
+					<option value="popularity">By Popularity.</option>
+				</select>
+			</div>
+			<!-- END filters -->
+		</div>
         
         <div id="tv-shows-result">
-<!--            <div class="tv-show-item is-duplicate">-->
-<!--                <img src="http://placekitten.com/200/200" alt="" class="poster">-->
-<!--                <div class="duplicate-badge show">-->
-<!--                    Already Imported!!-->
-<!--                </div>-->
-<!--                <div class="content">-->
-<!--                    <h3 class="title">Movie Title</h3>-->
-<!--                    <p class="para">Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info Other Info </p>-->
-<!--                    <div class="cta">-->
-<!--                        <button class="button button--import">Import</button>-->
-<!--                    </div>-->
-<!--                </div>-->
-<!--            </div>-->
+
         </div>
         <!-- END search results -->
+
+		<!-- START pagination -->
+		<div id="pagination">
+			<span>Show page</span>
+			<input type="number" name="result-page-no" id="result-page-no" value="0">
+			<span>of </span>
+			<span id="total-pages"></span>
+			<span> Pages</span>
+		</div>
+		<!-- END pagination -->
+        
+		<!-- save multimple shows -->
+		<div class="cta-2" style="text-align: center">
+            <button class="button" disabled>Import Selected</button>
+        </div>
 	</div>
 	<?php
 }
@@ -56,10 +76,12 @@ function mw_tv_shows_scripts_styles( $hook ) {
 	wp_enqueue_style( 'mw-tv-shows-js',
 		plugins_url( '/assets/main.css', __FILE__ ),''
 	);
+
 	wp_enqueue_script( 'mw-tv-shows-js',
 		plugins_url( '/assets/main.js', __FILE__ ),
 		array( 'jquery' ), '1.0', true
 	);
+	
 	wp_localize_script('mw-tv-shows-js', 'magicalData', array(
 		'nonce' => wp_create_nonce('wp_rest'),
 		'siteURL' => get_site_url()
