@@ -60,9 +60,8 @@
 
         tvShowsArr.map(tvShow => {
             let tvShowDesc = truncate(tvShow.overview, 20) || "No description found.";
-            let posterURL =
 
-                constructHTML += (`
+            constructHTML += (`
                 <div class="tv-show-item" data-item-id="${tvShow.id}">
                     ${tvShow.poster_path ? '<img src="https://image.tmdb.org/t/p/w500/' + tvShow.poster_path + '" alt="" class="poster">' : ' '}
                     <div class="duplicate-badge">
@@ -159,6 +158,9 @@
         }).done(function (data) {
             // console.log("------------------------- <br />");
             console.log(data);
+            let singleTvGenresArr = data.genres.map(genre => {
+                return genre.name
+            });
 
             let TVshow = {
                 "title": data.name,
@@ -166,17 +168,19 @@
                 "status": "publish",
                 "fields": {
                     "id": data.id,
-                    // "tv_genres": data.genres.name,
                     "poster_url": data.poster_path ? "https://image.tmdb.org/t/p/w500" + data.poster_path : " ",
                     "seasons_count": data.seasons.length, // now fetching only seasons
                     "seasons_list": []
+                },
+                "terms": {
+                    "tv_genres": singleTvGenresArr
                 }
             };
 
             $.when(
-                // fetch season for current tv show
+                // ------------- fetch season for current tv show
                 data.seasons.map(currSeason => {
-                    // fetch season + episodes
+                    // ------------- fetch season + episodes
                     let seasonEpisodeList = '';
                     let seasonObj = {};
 
@@ -188,9 +192,7 @@
                             console.log("fetching season " + currSeason.season_number + " data");
 
                             seasonData.episodes.map((episode, key) => {
-                                // return (
                                 seasonEpisodeList += `<div>${key + 1}. ${episode.name}</div>`
-                                // )
                             })
                         })
                     ).then(function () {

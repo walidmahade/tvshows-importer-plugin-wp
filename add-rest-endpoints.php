@@ -51,3 +51,15 @@ function search_tvshow_id($data) {
 		return false;
 	}
 }
+
+// =============== rest api save taxonomy ================ //
+function action_rest_insert_tvshows( $post, $request, $true ) {
+    $params = $request->get_json_params();
+    if(array_key_exists("terms", $params)) {
+        foreach($params["terms"] as $taxonomy => $terms) {
+            wp_set_object_terms($post->ID, $terms, $taxonomy);
+        }
+    }
+}
+
+add_action("rest_insert_tvshows", "action_rest_insert_tvshows", 10, 3);
