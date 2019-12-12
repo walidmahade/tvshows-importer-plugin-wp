@@ -47,8 +47,7 @@
             // console.log(data);
             console.log("Completed saving post, ID=> " + resData.id);
             console.log("Poster=> " + resData.acf.poster_url);
-            // get featured image & save to DB
-            getFeaturedImg(resData.id, resData.acf.poster_url);
+            saveFeaturedImg(resData.id, resData.acf.poster_url);
             processDone();
         }).fail(function (e) {
             console.log("Error saving post");
@@ -56,13 +55,13 @@
         });
     }
 
-    function getFeaturedImg(showId, imgUrl) {
+    function saveFeaturedImg(id, imgUrl) {
         // START saving featured image
         $status.html(`<span>saving featured image(s). This may take a while.</span><div id="loader"></div>`);
 
-        if (imgUrl) {
+        if (data.poster_path) {
             let imgObj = {
-                "imgurl": imgUrl
+                "imgurl": "https://image.tmdb.org/t/p/w500" + data.poster_path
             };
 
             // console.log(imgObj);
@@ -78,34 +77,13 @@
                     "X-WP-Nonce": magicalData.nonce
                 }
             }).done(function (featured_img_id) {
-                let updateObj = {
-                    "featured_media": featured_img_id
-                }
-
-                setFeaturedImage(updateObj, showId);
-                // TVshow["featured_media"] = featured_img_id;
-                // console.log("saved featured image");
+                TVshow["featured_media"] = featured_img_id;
+                console.log("saved featured image");
             });
         } else {
             $status.html("No featured image found.");
         }
         // done saving featured image
-    }
-
-    function setFeaturedImage(data, showId) {
-        $.ajax({
-            url: `${magicalData.siteURL}/wp-json/wp/v2/tvshows/${showId}`,
-            // async: false,
-            type: "POST",
-            data: JSON.stringify(data),
-            contentType: "application/json",
-            headers: {
-                "Content-Type": 'application/json;charset=UTF-8',
-                "X-WP-Nonce": magicalData.nonce
-            }
-        }).done(function (resData) {
-            console.log("saved featured image for ID=>" + resData.id);
-        });
     }
 
     function insertFetchedTVshowToDOM(tvShowsArr) {

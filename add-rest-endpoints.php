@@ -54,7 +54,7 @@ function set_image_from_url($data) {
 
 	$url = $data->get_param('imgurl');
 	
-    $tmp = download_url( $url );
+    $tmp = download_url( $url, 1800 );
 
     $file_array = array(
         'name' => basename( $url ),

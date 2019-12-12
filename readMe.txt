@@ -11,3 +11,7 @@
 6. Multiple nested ajax requests to fetch, show seasons, episodes.
 7. Save all of this as custom fields, with rest api.
 8. Nice UI to provide feedback of whats happening.
+
+9. Todo
+=> send a new update request after each post featured_image_id if fetched.
+    so it becomes non blocking.
