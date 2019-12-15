@@ -12,6 +12,7 @@
     let searchQuery = "love";
     let resultPage = 1;
     let url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
+    let imgPrefix = "https://image.tmdb.org/t/p/w500";
     let selectedTVshows = [];
     let currentVisibleTVshows = [];
 
@@ -33,6 +34,10 @@
         $status.html("Something went wrong!!");
     }
 
+    function startProcess(html) {
+        $status.html(html + '<div id="loading"></div>')
+    }
+
     function saveTvShowRequest(show, reqUrl) {
         $.ajax({
             type: "POST",
@@ -44,11 +49,18 @@
                 "X-WP-Nonce": magicalData.nonce
             }
         }).done(function (resData) {
+            let postId = resData.id;
+            let showId = resData.acf.id;
             // console.log(data);
-            console.log("Completed saving post, ID=> " + resData.id);
-            console.log("Poster=> " + resData.acf.poster_url);
+            console.log("Completed saving post, ID=> " + postId);
+            // console.log("Poster=> " + resData.acf.poster_url);
             // get featured image & save to DB
-            getFeaturedImg(resData.id, resData.acf.poster_url);
+            getFeaturedImg(postId, resData.acf.poster_url);
+            // get reviews and save them
+            saveReviews(postId, showId);
+            // get cast/people
+            saveShowCast(postId, showId);
+
             processDone();
         }).fail(function (e) {
             console.log("Error saving post");
@@ -56,7 +68,7 @@
         });
     }
 
-    function getFeaturedImg(showId, imgUrl) {
+    function getFeaturedImg(postId, imgUrl) {
         // START saving featured image
         $status.html(`<span>saving featured image(s). This may take a while.</span><div id="loader"></div>`);
 
@@ -82,7 +94,7 @@
                     "featured_media": featured_img_id
                 }
 
-                setFeaturedImage(updateObj, showId);
+                updateTVshow(updateObj, postId);
                 // TVshow["featured_media"] = featured_img_id;
                 // console.log("saved featured image");
             });
@@ -92,7 +104,7 @@
         // done saving featured image
     }
 
-    function setFeaturedImage(data, showId) {
+    function updateTVshow(data, showId) {
         $.ajax({
             url: `${magicalData.siteURL}/wp-json/wp/v2/tvshows/${showId}`,
             // async: false,
@@ -104,7 +116,69 @@
                 "X-WP-Nonce": magicalData.nonce
             }
         }).done(function (resData) {
-            console.log("saved featured image for ID=>" + resData.id);
+            console.log("updated => " + resData.id);
+            console.log("update object => ", resData);
+        });
+    }
+
+    function saveReviews(postId, showId) {
+        startProcess("Looking for Reviews");
+
+        $.ajax({
+            url: `https://api.themoviedb.org/3/tv/${showId}/reviews?api_key=${apiKey}&language=en-US&page=${resultPage}`
+        }).done(function (data) {
+            if (data.results.length) {
+                startProcess("Reviews found, saving to DataBase");
+
+                let reviewObj = {
+                    "fields": {
+                        "reviews": []
+                    }
+                }
+
+                data.results.map(review => {
+                    reviewObj["fields"]["reviews"].push({
+                        "author": review.author,
+                        "content": review.content
+                    });
+                });
+
+                updateTVshow(reviewObj, postId);
+
+                processDone();
+
+            } else {
+                console.log("no re view found for => " + showId);
+                console.log("review arr length => " + data.results.length);
+            }
+        })
+    }
+
+    function saveShowCast(postId, showId) {
+        startProcess("Adding TVshow Cast");
+
+        $.ajax({
+            url: `https://api.themoviedb.org/3/tv/${showId}/credits?api_key=${apiKey}&language=en-US`
+        }).done(function (data) {
+            console.log("Got cast ", data);
+
+            let castObj = {
+                "fields": {
+                    "series_cast": []
+                }
+            }
+
+            data.cast.map(person => {
+                castObj["fields"]["series_cast"].push({
+                    "name": person.name,
+                    "character": person.character,
+                    "profile_image": (person.profile_path) ? (imgPrefix + person.profile_path) : ''
+                });
+            });
+
+            updateTVshow(castObj, postId);
+
+            processDone();
         });
     }
 
@@ -223,7 +297,7 @@
                 "status": "publish",
                 "fields": {
                     "id": data.id,
-                    "poster_url": data.poster_path ? "https://image.tmdb.org/t/p/w500" + data.poster_path : " ",
+                    "poster_url": data.poster_path ? imgPrefix + data.poster_path : " ",
                     "seasons_count": data.seasons.length, // now fetching only seasons
                     "seasons_list": []
                 },
@@ -253,7 +327,7 @@
                     ).then(function () {
                         seasonObj["name"] = currSeason.name;
                         seasonObj["date"] = currSeason.air_date;
-                        seasonObj["poster_url"] = currSeason.poster_path ? "https://image.tmdb.org/t/p/w500" + currSeason.poster_path : " ";
+                        seasonObj["poster_url"] = currSeason.poster_path ? imgPrefix + currSeason.poster_path : " ";
                         seasonObj["episode_count"] = currSeason.episode_count;
                         seasonObj["episode_list"] = seasonEpisodeList;
 
@@ -427,14 +501,5 @@
 
         // updateSearchResult();
     }
-
-    // function updateSearchResult() {
-    //     searchQuery = $searchField.val();
-    //     url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
-    //
-    //     $status.html("<span>Refreshing search result </span><div id=\"loader\">Loading...</div>");
-    //     // actual work
-    //     fetchTVshows(url);
-    // }
 
 })(jQuery);
