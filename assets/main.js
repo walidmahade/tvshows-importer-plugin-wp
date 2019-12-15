@@ -15,6 +15,7 @@
     let imgPrefix = "https://image.tmdb.org/t/p/w500";
     let selectedTVshows = [];
     let currentVisibleTVshows = [];
+    let visibleTvshowType = '';
 
     function truncate(str, no_words) {
         return str.split(" ").splice(0, no_words).join(" ");
@@ -52,7 +53,7 @@
             let postId = resData.id;
             let showId = resData.acf.id;
             // console.log(data);
-            console.log("Completed saving post, ID=> " + postId);
+            // console.log("Completed saving post, ID=> " + postId);
             // console.log("Poster=> " + resData.acf.poster_url);
             // get featured image & save to DB
             getFeaturedImg(postId, resData.acf.poster_url);
@@ -60,11 +61,15 @@
             saveReviews(postId, showId);
             // get cast/people
             saveShowCast(postId, showId);
+            // get video trailer
+            saveTrailerUrl(postId, showId);
+            // get gallery images
+            saveGalleryImages(postId, showId);
 
             processDone();
         }).fail(function (e) {
-            console.log("Error saving post");
-            processError()
+            // console.log("Error saving post");
+            processError();
         });
     }
 
@@ -116,8 +121,9 @@
                 "X-WP-Nonce": magicalData.nonce
             }
         }).done(function (resData) {
-            console.log("updated => " + resData.id);
-            console.log("update object => ", resData);
+            // console.log("updated => " + resData.id);
+            // console.log("update object => ", resData);
+            processDone();
         });
     }
 
@@ -148,8 +154,45 @@
                 processDone();
 
             } else {
-                console.log("no re view found for => " + showId);
-                console.log("review arr length => " + data.results.length);
+                // console.log("no re view found for => " + showId);
+                // console.log("review arr length => " + data.results.length);
+                startProcess("no re view found for: " + showId);
+                processDone();
+            }
+        })
+    }
+
+    function saveGalleryImages(postId, showId) {
+        startProcess("Looking for gallery images");
+
+        $.ajax({
+            url: `https://api.themoviedb.org/3/tv/${showId}/images?api_key=${apiKey}`
+        }).done(function (data) {
+            if (data.posters.length) {
+                // console.log("## ## Posters found ## ## ");
+                startProcess("Gallery found, getting images");
+
+                let galleryObj = {
+                    "fields": {
+                        "image_gallery": []
+                    }
+                }
+
+                data.posters.map((img, i) => {
+                    galleryObj["fields"]["image_gallery"].push({
+                        "name": i,
+                        "url": imgPrefix + img.file_path
+                    });
+                });
+
+                updateTVshow(galleryObj, postId);
+
+                processDone();
+
+            } else {
+                // console.log("No posters found");
+                startProcess("No posters found");
+                processDone();
             }
         })
     }
@@ -160,7 +203,7 @@
         $.ajax({
             url: `https://api.themoviedb.org/3/tv/${showId}/credits?api_key=${apiKey}&language=en-US`
         }).done(function (data) {
-            console.log("Got cast ", data);
+            // console.log("Got cast ", data);
 
             let castObj = {
                 "fields": {
@@ -179,6 +222,35 @@
             updateTVshow(castObj, postId);
 
             processDone();
+        });
+    }
+
+    function saveTrailerUrl(postId, showId) {
+        startProcess("Adding trailer url");
+
+        $.ajax({
+            url: `https://api.themoviedb.org/3/tv/${showId}/videos?api_key=${apiKey}&language=en-US`
+        }).done(function (data) {
+            if (data.results.length) {
+
+                let showObj = {
+                    "fields": {
+                        "trailer": "https://www.youtube.com/watch?v=" + data.results[0].key
+                    }
+                }
+
+                // data.cast.map(video => {
+                //     castObj["fields"]["trailer"] = ;
+                // });
+
+                updateTVshow(showObj, postId);
+
+                processDone();
+            } else {
+                // console.log("** ** No videos found ** **");
+                startProcess("No videos found");
+                processDone();
+            }
         });
     }
 
@@ -220,7 +292,7 @@
         $.ajax({
             url: url
         }).success(function (data) {
-            console.log(data);
+            // console.log(data);
             currentVisibleTVshows = data.results;
 
             // console.log(data.results.length);
@@ -285,11 +357,19 @@
             url: `https://api.themoviedb.org/3/tv/${ID}?api_key=${apiKey}&language=en-US`
         }).done(function (data) {
             // console.log("------------------------- <br />");
-            console.log(data);
+            // console.log(data);
 
             let singleTvGenresArr = data.genres.map(genre => {
                 return genre.name
             });
+
+            if (visibleTvshowType === "recent") {
+                singleTvGenresArr.push("Recent");
+            } else if (visibleTvshowType === "top-rated") {
+                singleTvGenresArr.push("Top Rated");
+            } else if (visibleTvshowType === "popular") {
+                singleTvGenresArr.push("Popular");
+            }
 
             let TVshow = {
                 "title": data.name,
@@ -306,6 +386,10 @@
                 }
             };
 
+            // console.log("-+-++---------+++++++++");
+            // console.log(singleTvGenresArr);
+
+
             $.when(
                 // ------------- fetch season for current tv show
                 data.seasons.map(currSeason => {
@@ -318,7 +402,7 @@
                             url: `https://api.themoviedb.org/3/tv/${data.id}/season/${currSeason.season_number}?api_key=${apiKey}&language=en-US`,
                             async: false
                         }).done(function (seasonData) {
-                            console.log("fetching season " + currSeason.season_number + " data");
+                            // console.log("fetching season " + currSeason.season_number + " data");
 
                             seasonData.episodes.map((episode, key) => {
                                 seasonEpisodeList += `<div>${key + 1}. ${episode.name}</div>`
@@ -335,8 +419,8 @@
                     });
                 })
             ).then(function () {
-                console.log("----- season list ------");
-                console.log(TVshow);
+                // console.log("----- season list ------");
+                // console.log(TVshow);
                 // console.log(typeof seasonsList);
 
                 saveSingleTVshow(TVshow);
@@ -367,16 +451,21 @@
         });
     }
 
+    function resetSearch() {
+        $searchField.val('');
+    }
+
     // search field functionality
     $searchField.keyup(function (e) {
         e.preventDefault();
         searchQuery = $searchField.val();
         resultPage = 1;
+        visibleTvshowType = "search";
         url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
 
         if (e.keyCode === 13) {
             // $loader.show();
-            console.log("fetching post");
+            // console.log("fetching post");
             // status update
             $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
             // actual work
@@ -389,10 +478,19 @@
         // e.preventDefault();
         searchQuery = $searchField.val();
         resultPage = $currentResultPageDisplay.val();
-        url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
+
+        if (visibleTvshowType === "search") {
+            url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
+        } else if (visibleTvshowType === "recent") {
+            url = `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&language=en-US&page=${resultPage}`;
+        } else if (visibleTvshowType === "top-rated") {
+            url = `https://api.themoviedb.org/3/tv/top_rated?api_key=${apiKey}&language=en-US&page=${resultPage}`;
+        } else if (visibleTvshowType === "popular") {
+            url = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${resultPage}`;
+        }
 
         if (e.keyCode === 13) {
-            console.log("fetching post");
+            // console.log("fetching post");
             // status update
             $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
             // actual work
@@ -410,7 +508,7 @@
             $status.html(`<span>Updating. </span><div id="loader"></div>`);
 
             let showId = $(e.target).attr("data-show-id");
-            console.log(showId);
+            // console.log(showId);
             // $loader.show();
             fetchSingleTvShow(showId);
         } else if ($(e.target).hasClass('button--import')) {
@@ -421,7 +519,7 @@
             $status.html(`<span>Importing.</span><div id="loader"></div>`);
 
             let showId = $(e.target).attr("data-show-id");
-            console.log(showId);
+            // console.log(showId);
             // $loader.show();
             fetchSingleTvShow(showId);
         }
@@ -435,7 +533,7 @@
             let showId = $(e.target).attr("data-select-id");
 
             if ($(e.target).hasClass('selected')) {
-                console.log("removed show ID => " + showId);
+                // console.log("removed show ID => " + showId);
                 $(e.target).removeClass("selected");
                 $(e.target).html("Select");
                 let index = selectedTVshows.indexOf(showId);
@@ -447,9 +545,9 @@
                 $(e.target).addClass("selected");
                 $(e.target).html("Selected");
                 $(".cta-2 .button").removeAttr("disabled");
-                console.log("selected show ID => " + showId);
+                // console.log("selected show ID => " + showId);
             }
-            console.log(selectedTVshows)
+            // console.log(selectedTVshows)
 
             // if array is empty, disable load button
             if (selectedTVshows.length < 1) {
@@ -501,5 +599,47 @@
 
         // updateSearchResult();
     }
+
+    // --------------- suggest button handlers
+    const $recentBtn = $("#recent-btn");
+    const $topRatedBtn = $("#top-rated-btn");
+    const $mostPopularBtn = $("#most-popular-btn");
+
+    $recentBtn.click(function () {
+        resetSearch();
+        visibleTvshowType = "recent";
+        url = `https://api.themoviedb.org/3/tv/airing_today?api_key=${apiKey}&language=en-US&page=${resultPage}`;
+        $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
+        // actual work
+        fetchTVshows(url);
+    });
+
+    $topRatedBtn.click(function () {
+        resetSearch();
+        visibleTvshowType = "top-rated";
+        url = `https://api.themoviedb.org/3/tv/top_rated?api_key=${apiKey}&language=en-US&page=${resultPage}`;
+        $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
+        // actual work
+        fetchTVshows(url);
+    });
+
+    $mostPopularBtn.click(function () {
+        resetSearch();
+        visibleTvshowType = "popular";
+        url = `https://api.themoviedb.org/3/tv/popular?api_key=${apiKey}&language=en-US&page=${resultPage}`;
+        $status.html("<span>Fetching post</span><div id=\"loader\">Loading...</div>");
+        // actual work
+        fetchTVshows(url);
+    });
+
+    // ---------- select all btn
+    $("#select-all-btn").click(function (e) {
+        e.preventDefault();
+        const selectButtons = $(".button--select");
+
+        if (selectButtons.length) {
+            selectButtons.trigger('click');
+        }
+    })
 
 })(jQuery);

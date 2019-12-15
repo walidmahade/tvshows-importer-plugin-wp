@@ -195,6 +195,38 @@ $screen-xl-min: 1200px; // Large tablets and desktops
   margin: 0 10px;
 }
 
+// ------ select all btn
+#select-all-btn {
+  position: absolute !important;
+  right: 25px;
+  font-weight: bold;
+  border-width: 2px;
+}
+
+// ---------------- suggest-btns
+.suggest-btns {
+  text-align: center;
+  margin-top: 35px;
+
+  .button {
+    margin: 0 10px;
+    display: inline-block;
+  }
+
+  .text-btn {
+    border-color: transparent;
+    background: transparent;
+    color: #000;
+    cursor: default;
+
+    &:hover {
+      color: #000;
+      border-color: transparent;
+      background: transparent;
+    }
+  }
+}
+
 /* ========================== loader =================== */
 // -------------- spin
 #loader,

@@ -21,6 +21,9 @@ function my_admin_menu() {
 function mw_tv_show_import_page(){
 	?>
     <div class="mw-tv-shows">
+		
+		<button id="select-all-btn" class="button">Select All</button>
+
         <div id="ui-update">
             Use search to get started.
         </div>
@@ -43,6 +46,13 @@ function mw_tv_show_import_page(){
 				</select>
 			</div>
 			<!-- END filters -->
+		</div>
+
+		<div class="suggest-btns">
+			<span class="span text-btn">Suggested TVshows: </span>
+			<button id="recent-btn" class="button">Most Recent</button>
+			<button id="top-rated-btn" class="button">Top Rated</button>
+			<button id="most-popular-btn" class="button">Pupular</button>
 		</div>
         
         <div id="tv-shows-result">
