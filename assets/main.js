@@ -62,7 +62,7 @@
             // get cast/people
             saveShowCast(postId, showId);
             // get video trailer
-            saveTrailerUrl(postId, showId);
+            saveVideos(postId, showId);
             // get gallery images
             saveGalleryImages(postId, showId);
 
@@ -225,7 +225,7 @@
         });
     }
 
-    function saveTrailerUrl(postId, showId) {
+    function saveVideos(postId, showId) {
         startProcess("Adding trailer url");
 
         $.ajax({
@@ -235,16 +235,18 @@
 
                 let showObj = {
                     "fields": {
-                        "trailer": "https://www.youtube.com/watch?v=" + data.results[0].key
+                        "videos": []
                     }
-                }
+                };
 
-                // data.cast.map(video => {
-                //     castObj["fields"]["trailer"] = ;
-                // });
+                data.results.map(video => {
+                    showObj["fields"]["videos"].push({
+                        "url": "https://www.youtube.com/watch?v=" + video.key
+                    });
+                });
 
                 updateTVshow(showObj, postId);
-
+                console.log(showObj);
                 processDone();
             } else {
                 // console.log("** ** No videos found ** **");
@@ -377,6 +379,7 @@
                 "status": "publish",
                 "fields": {
                     "id": data.id,
+                    "rating": data.vote_average,
                     "poster_url": data.poster_path ? imgPrefix + data.poster_path : " ",
                     "seasons_count": data.seasons.length, // now fetching only seasons
                     "seasons_list": []
@@ -460,7 +463,9 @@
         e.preventDefault();
         searchQuery = $searchField.val();
         resultPage = 1;
+
         visibleTvshowType = "search";
+
         url = `https://api.themoviedb.org/3/search/tv?api_key=${apiKey}&language=en-US&page=${resultPage}&query=${searchQuery}`;
 
         if (e.keyCode === 13) {

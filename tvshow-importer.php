@@ -4,13 +4,6 @@
 	Author URI: https://mahade.dev
 */
 
-/**
- * psudo code
-    * Add Custom Post type
-    * Add Admin Pages
-    * Setup other Functionality
- */
-
 // setup admin pages
 add_action( 'admin_menu', 'my_admin_menu' );
 
@@ -103,3 +96,4 @@ function mw_tv_shows_scripts_styles( $hook ) {
 //);
 
 require_once ( plugin_dir_path( __FILE__ ) . '/add-rest-endpoints.php');
+require_once ( plugin_dir_path( __FILE__ ) . '/widgets/videos.php');
