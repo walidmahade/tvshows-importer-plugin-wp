@@ -96,4 +96,4 @@ function mw_tv_shows_scripts_styles( $hook ) {
 //);
 
 require_once ( plugin_dir_path( __FILE__ ) . '/add-rest-endpoints.php');
-require_once ( plugin_dir_path( __FILE__ ) . '/widgets/videos.php');
+require_once ( plugin_dir_path( __FILE__ ) . '/widgets/widgets.php');

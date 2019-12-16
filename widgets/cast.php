@@ -1,11 +1,11 @@
 <?php
 // The widget class
-class Mw_TV_show_videos extends WP_Widget {
+class Mw_TV_show_cast extends WP_Widget {
 	// Main constructor
 	public function __construct() {
 		parent::__construct(
-			'mw_tv_show_videos',
-			__( 'Mw TV show videos', 'text_domain' ),
+			'mw_tv_show_cast',
+			__( 'Mw TV show cast', 'text_domain' ),
 			array(
 				'customize_selective_refresh' => true,
 			)
@@ -24,22 +24,34 @@ class Mw_TV_show_videos extends WP_Widget {
 
 	// Display the widget
 	public function widget( $args, $instance ) {
+/*
 		// check if the repeater field has rows of data
-		if( have_rows('videos') ):
+		if( have_rows('series_cast') ):
 			// loop through the rows of data
-			while ( have_rows('videos') ) : the_row();
+			while ( have_rows('series_cast') ) : the_row();
+				$cast .= the_sub_field('name') . ", ";
 				// display a sub field value
-				echo "<p>" . the_sub_field('url') . "</p>";
+//				echo "<span>" . the_sub_field('name') . ",</span>";
 			endwhile;
+
+			echo rtrim($cast,',');
+
 		else :
 			echo "<p class='not-found'>No Videos found.</p>";
 		endif;
+*/
+
+		$rows = get_field('series_cast');
+		$cast = "";
+
+		if ($rows) {
+			foreach($rows as $row) {
+				$cast .= $row['name'] . ", ";
+			}
+
+			echo rtrim($cast,', ');
+		} else {
+			echo "<p class='not-found'>No cast found.</p>";
+		}
 	}
-
 }
-
-// Register the widget
-function my_register_custom_widget() {
-	register_widget( 'Mw_tv_show_videos' );
-}
-add_action( 'widgets_init', 'my_register_custom_widget' );

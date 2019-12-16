@@ -11,4 +11,7 @@
 6. Multiple nested ajax requests to fetch, show seasons, episodes.
 7. Save all of this as custom fields, with rest api.
 8. Nice UI to provide feedback of whats happening.
-9. 
+
+TODOS:
+--------------------------
+# Get ratings from IMDB

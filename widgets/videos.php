@@ -35,11 +35,4 @@ class Mw_TV_show_videos extends WP_Widget {
 			echo "<p class='not-found'>No Videos found.</p>";
 		endif;
 	}
-
 }
-
-// Register the widget
-function my_register_custom_widget() {
-	register_widget( 'Mw_tv_show_videos' );
-}
-add_action( 'widgets_init', 'my_register_custom_widget' );
