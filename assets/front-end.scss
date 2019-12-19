@@ -50,7 +50,7 @@ $theme: #f7941c;
 */
 .casts-wrap {
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
   flex-wrap: wrap;
 
   .casts-item {
@@ -98,6 +98,18 @@ $theme: #f7941c;
       width: 35px;
       height: 35px;
     }
+  }
+}
+
+// simple video gallery for <= 3 videos
+#mw-svg {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .mw-svg-item {
+    width: 353px;
+    margin: 10px;
   }
 }
 /**
@@ -197,6 +209,26 @@ $theme: #f7941c;
   .right {
     transform-origin: 50%;
     transform: rotate(180deg);
+  }
+}
+
+// simple image gallery for <= 5 images
+#mw-sig {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  .mw-sig-item {
+    width: 50%;
+    padding: 0 6px;
+
+    @include sm {
+      width: 33%;
+    }
+
+    @include lg {
+      width: 20%;
+    }
   }
 }
 /*

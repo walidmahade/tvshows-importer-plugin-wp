@@ -25,7 +25,8 @@ class Mw_TV_show_images_gallery extends WP_Widget {
 	// Display the widget
 	public function widget( $args, $instance ) {
 		// check if the repeater field has rows of data
-		if( have_rows('image_gallery') ):
+		if( have_rows('image_gallery') && (count(get_field('image_gallery')) > 5) ) :
+//			$total_rows = count(get_field('image_gallery'));
 			echo '<div class="glide" id="image-gallery-slider"><div class="glide__track" data-glide-el="track"><ul class="glide__slides">';
 			// loop through the rows of data
 			while ( have_rows('image_gallery') ) : the_row();
@@ -59,22 +60,17 @@ class Mw_TV_show_images_gallery extends WP_Widget {
 					</div>
 				</div>
 			');
+		elseif ( have_rows('image_gallery') && (count(get_field('image_gallery')) <= 5) ):
+			echo '<div id="mw-sig">';
+			// loop through the rows of data
+			while ( have_rows('image_gallery') ) : the_row();
+				$url = get_sub_field('url');
+				// display a sub field value
+				echo "<div class='mw-sig-item'><img src='" . $url ."'/></div>";
+			endwhile;
+			echo '</div>';
 		else :
 			echo "<p class='not-found'>No Images found.</p>";
 		endif;
-
-//		$rows = get_field('image_gallery');
-//		echo "<div class='image-gallery-wrap'>";
-//		if ($rows) {
-//			foreach($rows as $row) {
-//				$image = $row['url'];
-//				echo "<div class='image-gallery-item'>";
-//				echo "<img src='$image' />";
-//				echo "</div>";
-//			}
-//		} else {
-//			echo "<p class='not-found'>No cast found.</p>";
-//		}
-//		echo "</div>";
 	}
 }
