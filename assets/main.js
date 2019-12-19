@@ -241,7 +241,8 @@
 
                 data.results.map(video => {
                     showObj["fields"]["videos"].push({
-                        "url": "https://www.youtube.com/watch?v=" + video.key
+                        // "url": "https://www.youtube.com/watch?v=" + video.key
+                        "url": video.key
                     });
                 });
 

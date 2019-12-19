@@ -1,0 +1,364 @@
+/****************************************
+     mixins
+*****************************************/
+
+$screen-sm-min: 576px; // mobiles
+$screen-md-min: 768px; // Small tablets (portrait view)
+$screen-lg-min: 992px; // Tablets and small desktops
+$screen-xl-min: 1200px; // Large tablets and desktops
+
+// mobile devices
+@mixin sm {
+  @media (min-width: #{$screen-sm-min}) {
+    @content;
+  }
+}
+
+// Medium devices
+@mixin md {
+  @media (min-width: #{$screen-md-min}) {
+    @content;
+  }
+}
+
+// Large devices
+@mixin lg {
+  @media (min-width: #{$screen-lg-min}) {
+    @content;
+  }
+}
+
+// Extra large devices
+@mixin xl {
+  @media (min-width: #{$screen-xl-min}) {
+    @content;
+  }
+}
+// Custom devices
+@mixin rwd($screen) {
+  @media (min-width: $screen) {
+    @content;
+  }
+}
+/*================================================*/
+//    END MIXINS
+/*================================================*/
+// vars
+$theme: #f7941c;
+/**
+* Cast details section css START
+*/
+.casts-wrap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+
+  .casts-item {
+    width: 30%;
+    padding: 25px 10px;
+
+    @include sm {
+      width: 24%;
+    }
+    @include md {
+      width: 19%;
+    }
+  }
+
+  .cast-name {
+    margin-top: 15px;
+    font-size: 15px;
+  }
+}
+
+/**
+* Cast details section css END
+*/
+
+/**
+* Video gallery section css START
+*/
+#tv-videos-slider,
+#image-gallery-slider {
+  ul,li {
+    margin: 0;
+  }
+
+  .glide__arrow {
+    background: transparent;
+    border: none;
+    border-radius: 50%;
+
+    &--right {
+      transform: rotate(180deg);
+      transform-origin: 50% 25%;
+    }
+
+    svg {
+      width: 35px;
+      height: 35px;
+    }
+  }
+}
+/**
+* Video gallery section css END
+*/
+
+/*
+* Image gallery START
+*/
+.image-gallery-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+
+  .image-gallery-item {
+    width: 48%;
+
+    @include md {
+      width: 31.5%;
+    }
+
+    @include lg {
+      width: 19%;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+    }
+  }
+}
+
+#light-box {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: rgba(#000, .9);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity .3s ease-in-out;
+  will-change: opacity, visibility;
+
+  @include md {
+    padding: 45px;
+  }
+
+  .body {
+    padding: 0 15px;
+  }
+
+  &.show {
+    opacity: 1;
+    visibility: visible;
+  }
+
+  .close {
+    position: absolute;
+    top: 40px;
+    right: 45px;
+    cursor: pointer;
+
+    svg {
+      height: 25px;
+      width: 25px;
+    }
+  }
+
+  svg {
+    width: 30px;
+    @include md {
+      width: 40px;
+    }
+    @include lg {
+      width: 50px;
+    }
+  }
+
+  .left,
+  .right {
+    cursor: pointer;
+    width: 30px;
+    @include md {
+      width: 40px;
+    }
+    @include lg {
+      width: 50px;
+    }
+  }
+
+  .right {
+    transform-origin: 50%;
+    transform: rotate(180deg);
+  }
+}
+/*
+* Image gallery END
+*/
+
+/*
+* Seasons list START
+*/
+#seasons-tab {
+  display: flex;
+  justify-content: flex-start;
+  align-content: flex-start;
+
+  .tab-nav {
+    width: auto;
+    max-width: 350px;
+    min-width: 120px;
+
+    @include md {
+      width: 100%;
+    }
+
+    &-item {
+      border: 1px solid transparent;
+      border-right-color: $theme;
+      padding: 15px;
+      cursor: pointer;
+      transition: all .3s ease-in-out;
+
+      @include sm {
+        padding: 15px 25px;
+      }
+
+      &.show {
+        border: 1px solid $theme;
+        border-right-color: transparent;
+      }
+
+      &:hover {
+        .name {
+          color: $theme;
+        }
+      }
+    }
+
+    .show {
+      .name {
+        color: $theme;
+      }
+    }
+
+    .name {
+      font-weight: bold;
+      font-size: 16px;
+      margin-bottom: 5px;
+      color: inherit;
+      transition: all .3s ease-in-out;
+
+      @include sm {
+        font-size: 22px;
+      }
+    }
+
+    .date,
+    .e-count {
+      font-size: 13px;
+      font-weight: 300;
+      @include sm {
+        font-size: 15px;
+      }
+    }
+
+    .e-count {
+      display: none;
+      @include sm {
+        display: block;
+      }
+    }
+
+  }
+
+  .tab-content {
+    width: auto;
+    padding: 15px;
+    border-top: 1px solid $theme;
+    border-bottom: 1px solid $theme;
+    flex: 1;
+
+    @include sm {
+      padding: 25px 25px 15px 45px;
+    }
+
+    &-item {
+      line-height: 1.7;
+      font-weight: 300;
+      font-size: 15px;
+      opacity: 0;
+      visibility: hidden;
+      position: absolute;
+      will-change: opacity, position, visibility;
+
+      @include sm {
+        font-size: 18px;
+      }
+
+      &.hide {
+        opacity: 0 !important;
+        visibility: hidden !important;
+        position: absolute !important;
+      }
+
+      &.show {
+        opacity: 1;
+        visibility: visible;
+        position: relative;
+      }
+    }
+
+    [data-tab-id="0"] {
+      opacity: 1;
+      visibility: visible;
+      position: relative;
+    }
+  }
+}
+
+/**
+* Related Post Items START
+*/
+
+#related-posts-wrap {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+
+  @include lg {
+    justify-content: space-between;
+  }
+
+  .related-post {
+    width: 48%;
+    padding: 15px 10px;
+
+    @include sm {
+      width: 31%;
+    }
+
+    @include md {
+      width: 19%;
+    }
+
+    img {
+      display: block;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+
+    .title {
+      color: #545454;
+      font-family: inherit;
+      text-align: center;
+    }
+  } // related psot
+}

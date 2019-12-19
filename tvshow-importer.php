@@ -71,12 +71,12 @@ function mw_tv_show_import_page(){
 	<?php
 }
 
-// add page scripts and styles
+// add page scripts and styles - admin side
 add_action( 'admin_enqueue_scripts', 'mw_tv_shows_scripts_styles' );
 
 function mw_tv_shows_scripts_styles( $hook ) {
 	if( 'toplevel_page_tv-shows-import' != $hook ) return;
-	wp_enqueue_style( 'mw-tv-shows-js',
+	wp_enqueue_style( 'mw-tv-shows-css',
 		plugins_url( '/assets/main.css', __FILE__ ),''
 	);
 
@@ -91,9 +91,31 @@ function mw_tv_shows_scripts_styles( $hook ) {
 	));
 }
 
-//require (
-//        plugins_url('/add-rest-endpoints.php', __FILE__)
-//);
+// add page scripts and styles client
+add_action( 'wp_enqueue_scripts', 'mw_tv_shows_widget_script_styles' );
 
+function mw_tv_shows_widget_script_styles() {
+//	if (is_singular('tvshows')) {
+		wp_enqueue_style( 'glide-slider-css-core',
+			plugins_url( '/assets/glide/css/glide.core.css', __FILE__ ),''
+		);
+		wp_enqueue_style( 'glide-slider-css-theme',
+			plugins_url( '/assets/glide/css/glide.theme.css', __FILE__ ),''
+		);
+		wp_enqueue_style( 'mw-tv-shows-widget-css',
+			plugins_url( '/assets/front-end.css', __FILE__ ),''
+		);
+		wp_enqueue_script( 'glide-slider-js',
+			plugins_url( '/assets/glide/glide.min.js', __FILE__ ),
+			array('jquery'), '1.0', true
+		);
+		wp_enqueue_script( 'mw-tv-shows-widget-js',
+			plugins_url( '/assets/front-end.js', __FILE__ ),
+			array('jquery'), '1.0', true
+		);
+//    }
+}
+
+// require widget files
 require_once ( plugin_dir_path( __FILE__ ) . '/add-rest-endpoints.php');
 require_once ( plugin_dir_path( __FILE__ ) . '/widgets/widgets.php');

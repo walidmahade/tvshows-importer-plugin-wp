@@ -1,0 +1,318 @@
+/****************************************
+     mixins
+*****************************************/
+/*================================================*/
+/*================================================*/
+/**
+* Cast details section css START
+*/
+.casts-wrap {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+}
+.casts-wrap .casts-item {
+  width: 30%;
+  padding: 25px 10px;
+}
+@media (min-width: 576px) {
+  .casts-wrap .casts-item {
+    width: 24%;
+  }
+}
+@media (min-width: 768px) {
+  .casts-wrap .casts-item {
+    width: 19%;
+  }
+}
+.casts-wrap .cast-name {
+  margin-top: 15px;
+  font-size: 15px;
+}
+
+/**
+* Cast details section css END
+*/
+/**
+* Video gallery section css START
+*/
+#tv-videos-slider ul, #tv-videos-slider li,
+#image-gallery-slider ul,
+#image-gallery-slider li {
+  margin: 0;
+}
+#tv-videos-slider .glide__arrow,
+#image-gallery-slider .glide__arrow {
+  background: transparent;
+  border: none;
+  border-radius: 50%;
+}
+#tv-videos-slider .glide__arrow--right,
+#image-gallery-slider .glide__arrow--right {
+  transform: rotate(180deg);
+  transform-origin: 50% 25%;
+}
+#tv-videos-slider .glide__arrow svg,
+#image-gallery-slider .glide__arrow svg {
+  width: 35px;
+  height: 35px;
+}
+
+/**
+* Video gallery section css END
+*/
+/*
+* Image gallery START
+*/
+.image-gallery-wrap {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+.image-gallery-wrap .image-gallery-item {
+  width: 48%;
+}
+@media (min-width: 768px) {
+  .image-gallery-wrap .image-gallery-item {
+    width: 31.5%;
+  }
+}
+@media (min-width: 992px) {
+  .image-gallery-wrap .image-gallery-item {
+    width: 19%;
+  }
+}
+.image-gallery-wrap .image-gallery-item img {
+  display: block;
+  width: 100%;
+}
+
+#light-box {
+  position: fixed;
+  top: 0;
+  right: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9999;
+  background: rgba(0, 0, 0, 0.9);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 0.3s ease-in-out;
+  will-change: opacity, visibility;
+}
+@media (min-width: 768px) {
+  #light-box {
+    padding: 45px;
+  }
+}
+#light-box .body {
+  padding: 0 15px;
+}
+#light-box.show {
+  opacity: 1;
+  visibility: visible;
+}
+#light-box .close {
+  position: absolute;
+  top: 40px;
+  right: 45px;
+  cursor: pointer;
+}
+#light-box .close svg {
+  height: 25px;
+  width: 25px;
+}
+#light-box svg {
+  width: 30px;
+}
+@media (min-width: 768px) {
+  #light-box svg {
+    width: 40px;
+  }
+}
+@media (min-width: 992px) {
+  #light-box svg {
+    width: 50px;
+  }
+}
+#light-box .left,
+#light-box .right {
+  cursor: pointer;
+  width: 30px;
+}
+@media (min-width: 768px) {
+  #light-box .left,
+#light-box .right {
+    width: 40px;
+  }
+}
+@media (min-width: 992px) {
+  #light-box .left,
+#light-box .right {
+    width: 50px;
+  }
+}
+#light-box .right {
+  transform-origin: 50%;
+  transform: rotate(180deg);
+}
+
+/*
+* Image gallery END
+*/
+/*
+* Seasons list START
+*/
+#seasons-tab {
+  display: flex;
+  justify-content: flex-start;
+  align-content: flex-start;
+}
+#seasons-tab .tab-nav {
+  width: auto;
+  max-width: 350px;
+  min-width: 120px;
+}
+@media (min-width: 768px) {
+  #seasons-tab .tab-nav {
+    width: 100%;
+  }
+}
+#seasons-tab .tab-nav-item {
+  border: 1px solid transparent;
+  border-right-color: #f7941c;
+  padding: 15px;
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+@media (min-width: 576px) {
+  #seasons-tab .tab-nav-item {
+    padding: 15px 25px;
+  }
+}
+#seasons-tab .tab-nav-item.show {
+  border: 1px solid #f7941c;
+  border-right-color: transparent;
+}
+#seasons-tab .tab-nav-item:hover .name {
+  color: #f7941c;
+}
+#seasons-tab .tab-nav .show .name {
+  color: #f7941c;
+}
+#seasons-tab .tab-nav .name {
+  font-weight: bold;
+  font-size: 16px;
+  margin-bottom: 5px;
+  color: inherit;
+  transition: all 0.3s ease-in-out;
+}
+@media (min-width: 576px) {
+  #seasons-tab .tab-nav .name {
+    font-size: 22px;
+  }
+}
+#seasons-tab .tab-nav .date,
+#seasons-tab .tab-nav .e-count {
+  font-size: 13px;
+  font-weight: 300;
+}
+@media (min-width: 576px) {
+  #seasons-tab .tab-nav .date,
+#seasons-tab .tab-nav .e-count {
+    font-size: 15px;
+  }
+}
+#seasons-tab .tab-nav .e-count {
+  display: none;
+}
+@media (min-width: 576px) {
+  #seasons-tab .tab-nav .e-count {
+    display: block;
+  }
+}
+#seasons-tab .tab-content {
+  width: auto;
+  padding: 15px;
+  border-top: 1px solid #f7941c;
+  border-bottom: 1px solid #f7941c;
+  flex: 1;
+}
+@media (min-width: 576px) {
+  #seasons-tab .tab-content {
+    padding: 25px 25px 15px 45px;
+  }
+}
+#seasons-tab .tab-content-item {
+  line-height: 1.7;
+  font-weight: 300;
+  font-size: 15px;
+  opacity: 0;
+  visibility: hidden;
+  position: absolute;
+  will-change: opacity, position, visibility;
+}
+@media (min-width: 576px) {
+  #seasons-tab .tab-content-item {
+    font-size: 18px;
+  }
+}
+#seasons-tab .tab-content-item.hide {
+  opacity: 0 !important;
+  visibility: hidden !important;
+  position: absolute !important;
+}
+#seasons-tab .tab-content-item.show {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+#seasons-tab .tab-content [data-tab-id="0"] {
+  opacity: 1;
+  visibility: visible;
+  position: relative;
+}
+
+/**
+* Related Post Items START
+*/
+#related-posts-wrap {
+  display: flex;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+@media (min-width: 992px) {
+  #related-posts-wrap {
+    justify-content: space-between;
+  }
+}
+#related-posts-wrap .related-post {
+  width: 48%;
+  padding: 15px 10px;
+}
+@media (min-width: 576px) {
+  #related-posts-wrap .related-post {
+    width: 31%;
+  }
+}
+@media (min-width: 768px) {
+  #related-posts-wrap .related-post {
+    width: 19%;
+  }
+}
+#related-posts-wrap .related-post img {
+  display: block;
+  width: 100%;
+  margin-bottom: 10px;
+}
+#related-posts-wrap .related-post .title {
+  color: #545454;
+  font-family: inherit;
+  text-align: center;
+}
+
+/*# sourceMappingURL=front-end.css.map */
