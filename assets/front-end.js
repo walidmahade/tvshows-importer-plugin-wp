@@ -1,41 +1,52 @@
+
 // -------------- video gallery START
-new Glide('#tv-videos-slider', {
-    autoplay: 3500,
-    hoverpause: true,
-    perView: 3,
-    rewind: true,
-    bound: true,
-    breakpoints: {
-        800: {
-            perView: 2
-        },
-        425: {
-            perView: 1
+let tvSlider = document.querySelector("#tv-videos-slider");
+if (tvSlider) {
+    new Glide(tvSlider, {
+        autoplay: 3500,
+        hoverpause: true,
+        perView: 3,
+        rewind: true,
+        bound: true,
+        // focusAt: 'center',
+        breakpoints: {
+            800: {
+                perView: 2
+            },
+            425: {
+                perView: 1
+            }
         }
-    }
-}).mount();
+    }).mount();
+}
+
 // -------------- video gallery END
 
 // ------------- Image gallery START
-new Glide('#image-gallery-slider', {
-    autoplay: 3500,
-    hoverpause: true,
-    perView: 5,
-    rewind: true,
-    bound: true,
-    swipeThreshold: false,
-    dragThreshold: false,
-    breakpoints: {
-        800: {
-            perView: 4
-        },
-        425: {
-            perView: 2,
-            swipeThreshold: true,
-            dragThreshold: true
+let imageSlider = document.querySelector('#image-gallery-slider');
+
+if (imageSlider) {
+    new Glide(imageSlider, {
+        autoplay: 3500,
+        hoverpause: true,
+        perView: 5,
+        rewind: true,
+        bound: true,
+        swipeThreshold: false,
+        dragThreshold: false,
+        // focusAt: 'center',
+        breakpoints: {
+            800: {
+                perView: 4
+            },
+            425: {
+                perView: 2,
+                swipeThreshold: true,
+                dragThreshold: true
+            }
         }
-    }
-}).mount();
+    }).mount();
+}
 
 (function ($) {
     const lightBox = $("#light-box");

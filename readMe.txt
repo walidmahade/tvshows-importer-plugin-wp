@@ -15,3 +15,4 @@
 TODOS:
 --------------------------
 # Get ratings from IMDB
+# convert to slick slider
